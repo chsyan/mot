@@ -1,0 +1,34 @@
+{
+  "name": "mot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --inspect --respawn src/index.ts",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "start": "tsc --build && node dist/index.js",
+    "prod": "node dist/index.js",
+    "pm2:start": "pm2 start dist/index.js --watch -i max --name anti-coffea",
+    "pm2:stop": "pm2 kill"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chsyan/mot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chsyan/mot/issues"
+  },
+  "homepage": "https://github.com/chsyan/mot#readme",
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "discord.js": "^14.9.0",
+    "dotenv": "^16.0.3"
+  }
+}
