@@ -30,8 +30,9 @@
         "typescript": "^5.0.4"
     },
     "dependencies": {
+        "@distube/ytdl-core": "^4.11.9",
         "discord.js": "^14.9.0",
         "dotenv": "^16.0.3",
-        "ytdl-core": "^4.11.4"
+        "ytsr": "^3.8.2"
     }
 }
