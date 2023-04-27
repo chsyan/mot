@@ -1,5 +1,5 @@
 import { GuildQueue, Player, useQueue } from "discord-player";
-import { Client, CommandInteraction, GuildMember } from "discord.js";
+import { Client, CommandInteraction, EmbedBuilder, GuildMember, inlineCode } from "discord.js";
 
 let player: Player;
 
@@ -42,6 +42,16 @@ const playUrl = async (interaction: CommandInteraction, url: string) => {
     if (!conn) return;
     const queue: GuildQueue = useQueue(interaction.guildId!)!;
     await player.play(queue.channel!, url);
+    if (interaction.replied)
+        await interaction.editReply({
+            content: `Queued ${inlineCode(queue.currentTrack?.title!)}`,
+            embeds: [],
+        });
+    else
+        await interaction.reply({
+            content: `Queued ${inlineCode(queue.currentTrack?.title!)}`,
+            embeds: [],
+        });
 };
 
 const skip = async (interaction: CommandInteraction) => {
@@ -56,4 +66,74 @@ const skip = async (interaction: CommandInteraction) => {
     await interaction.reply({ content: "Skipped", embeds: [] });
 };
 
-export { checkMemberVoice, init, connect, playUrl, skip };
+const nowPlaying = async (interaction: CommandInteraction) => {
+    const channel = await checkMemberVoice(interaction);
+    if (!channel) return;
+    const queue = useQueue(interaction.guildId!);
+    if (!queue) {
+        await interaction.reply({ content: "Empty queue", ephemeral: true });
+        return;
+    }
+
+    const currentTrack = queue.currentTrack!;
+    await interaction.reply({ content: `Now playing: ${inlineCode(currentTrack.title)}`, ephemeral: true });
+};
+
+const showQueue = async (interaction: CommandInteraction) => {
+    const channel = await checkMemberVoice(interaction);
+    if (!channel) return;
+    const queue = useQueue(interaction.guildId!);
+    if (!queue || queue.tracks.size === 0) {
+        await interaction.reply({ content: "Empty queue", ephemeral: true });
+        return;
+    }
+
+    const currentTrack = queue.currentTrack!;
+    const tracks = queue.tracks.toArray();
+    let replyString = "";
+    for (let i = 0; i < tracks.length; i++) {
+        const track = tracks[i]!;
+        replyString += `${i + 1}. ${track.title}\n`;
+    }
+
+    const selectionEmbed = new EmbedBuilder().setDescription(replyString);
+    await interaction.reply({
+        content: `Now playing: ${inlineCode(currentTrack.title)}\n\nCurrent queue (${tracks.length} songs):`,
+        embeds: [selectionEmbed],
+        ephemeral: true,
+    });
+};
+
+const shuffleQueue = async (interaction: CommandInteraction) => {
+    const channel = await checkMemberVoice(interaction);
+    if (!channel) return;
+    const queue = useQueue(interaction.guildId!);
+    if (!queue) {
+        await interaction.reply({ content: "Empty queue", ephemeral: true });
+        return;
+    }
+
+    queue.tracks.shuffle();
+
+    await showQueue(interaction);
+};
+
+const removeTrack = async (interaction: CommandInteraction, index: number) => {
+    const channel = await checkMemberVoice(interaction);
+    if (!channel) return;
+    const queue = useQueue(interaction.guildId!);
+    if (!queue) {
+        await interaction.reply({ content: "Empty queue", ephemeral: true });
+        return;
+    }
+
+    const track = queue.removeTrack(index);
+    if (!track) {
+        await interaction.reply({ content: "Invalid index", ephemeral: true });
+        return;
+    }
+
+    await interaction.reply({ content: `Removed ${inlineCode(track.title)}` });
+};
+
+export { checkMemberVoice, init, connect, playUrl, skip, nowPlaying, showQueue, shuffleQueue, removeTrack };

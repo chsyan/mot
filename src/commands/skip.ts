@@ -1,6 +1,6 @@
+import { skip } from "@/player";
 import { CommandInteraction } from "discord.js";
 import { Command } from "./util";
-import { skip } from "@/player";
 
 const skipCommand: Command = {
     name: "skip",

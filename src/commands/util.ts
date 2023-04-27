@@ -1,14 +1,28 @@
 import { ChatInputApplicationCommandData, ClientApplication, CommandInteraction, REST, Routes } from "discord.js";
 import { token } from "../index";
+import nowPlayingCommand from "./nowPlaying";
+import queryCommand from "./query";
 import pongCommand from "./pong";
-import playCommand from "./play";
 import skipCommand from "./skip";
+import showQueueCommand from "./showQueue";
+import shuffleQueueCommand from "./shuffleQueue";
+import removeTrackCommand from "./removeTrack";
+import playCommand from "./play";
 
 interface Command extends ChatInputApplicationCommandData {
     execute: (interaction: CommandInteraction) => Promise<void>;
 }
 
-const commands: Command[] = [pongCommand, playCommand, skipCommand];
+const commands: Command[] = [
+    pongCommand,
+    queryCommand,
+    skipCommand,
+    nowPlayingCommand,
+    showQueueCommand,
+    shuffleQueueCommand,
+    removeTrackCommand,
+    playCommand,
+];
 
 const loadCommands = async (app: ClientApplication, commands: Command[]) => {
     try {
