@@ -3,7 +3,7 @@ import { Client } from "discord.js";
 
 const interaction = async (client: Client) => {
     client.on("interactionCreate", async (interaction) => {
-        if (!interaction.isChatInputCommand()) {
+        if (!interaction.isChatInputCommand() || interaction.user.bot) {
             return;
         }
 

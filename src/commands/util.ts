@@ -1,11 +1,12 @@
 import { ChatInputApplicationCommandData, ClientApplication, CommandInteraction, REST, Routes } from "discord.js";
 import { token } from "../index";
+import pongCommand from "./pong";
 
 interface Command extends ChatInputApplicationCommandData {
     execute: (interaction: CommandInteraction) => Promise<void>;
 }
 
-const commands: Command[] = [];
+const commands: Command[] = [pongCommand];
 
 const loadCommands = async (app: ClientApplication, commands: Command[]) => {
     try {
