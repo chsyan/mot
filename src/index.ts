@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits } from "discord.js";
-import ready from "./listeners/ready";
 import interaction from "./listeners/interaction";
+import ready from "./listeners/ready";
 require("dotenv").config();
 
 export const token = process.env.TOKEN || "";

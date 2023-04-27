@@ -1,7 +1,6 @@
-import { ApplicationCommandOptionType, CommandInteraction, inlineCode } from "discord.js";
+import { playUrl } from "@/player";
+import { ApplicationCommandOptionType, CommandInteraction } from "discord.js";
 import { Command } from "./util";
-import { checkMemberVoice, playUrl } from "@/player";
-import { useQueue } from "discord-player";
 
 const playCommand: Command = {
     name: "play",

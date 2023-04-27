@@ -1,6 +1,6 @@
+import { nowPlaying } from "@/player";
 import { CommandInteraction } from "discord.js";
 import { Command } from "./util";
-import { nowPlaying, skip } from "@/player";
 
 const nowPlayingCommand: Command = {
     name: "nowplaying",

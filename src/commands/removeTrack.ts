@@ -1,4 +1,4 @@
-import { removeTrack, shuffleQueue } from "@/player";
+import { removeTrack } from "@/player";
 import { ApplicationCommandOptionType, CommandInteraction } from "discord.js";
 import { Command } from "./util";
 
