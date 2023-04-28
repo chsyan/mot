@@ -11,7 +11,7 @@ const queryLimit = 10;
 const queryShowLimit = 5;
 
 const query = async (interaction: CommandInteraction) => {
-    const query = interaction.options.get("query")?.value as string;
+    const query = interaction.options.get("song")?.value as string;
     if (!query) {
         await interaction.reply("No query provided");
         return;
@@ -19,14 +19,6 @@ const query = async (interaction: CommandInteraction) => {
 
     const chann = await checkMemberVoice(interaction);
     if (!chann) return;
-
-    const message = await interaction.reply({ content: "Searching...", ephemeral: false, fetchReply: true });
-
-    // Add reactions early since they are sequential and take time
-    const reactPromises = [];
-    for (const number of numbers) {
-        reactPromises.push(message.react(number));
-    }
 
     const results = await ytsr(query, { limit: queryLimit });
     let replyString = "";
@@ -45,10 +37,19 @@ const query = async (interaction: CommandInteraction) => {
     }
 
     const selectionEmbed = new EmbedBuilder().setDescription(replyString);
-    await interaction.editReply({
+    const message = await interaction.reply({
         content: `Search results for ${inlineCode(query)}`,
         embeds: [selectionEmbed],
+        ephemeral: false,
+        fetchReply: true,
     });
+
+    // Add reactions early since they are sequential and take time
+    const reactPromises = [];
+    for (const number of numbers) {
+        reactPromises.push(message.react(number));
+    }
+    await Promise.all(reactPromises);
 
     const filter = (reaction: MessageReaction, user: User) =>
         numbers.includes(reaction.emoji.name || "") && user.id === interaction.user.id;
@@ -70,8 +71,6 @@ const query = async (interaction: CommandInteraction) => {
         return;
     }
 
-
-
     message.reactions.removeAll();
 
     playUrl(interaction, item.url);
@@ -82,7 +81,7 @@ const queryCommand: Command = {
     description: "Query and play a song",
     options: [
         {
-            name: "query",
+            name: "song",
             description: "Query for a song",
             type: ApplicationCommandOptionType.String,
             required: true,
@@ -93,4 +92,5 @@ const queryCommand: Command = {
     },
 };
 
+export { query };
 export default queryCommand;

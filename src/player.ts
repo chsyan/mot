@@ -11,7 +11,12 @@ const checkMemberVoice = async (interaction: CommandInteraction) => {
         // Check if already replied
         if (interaction.replied)
             await interaction.editReply({ content: "You must be in a voice channel to use this command", embeds: [] });
-        else await interaction.reply({ content: "You must be in a voice channel to use this command", embeds: [] });
+        else
+            await interaction.reply({
+                content: "You must be in a voice channel to use this command",
+                embeds: [],
+                ephemeral: true,
+            });
     }
     return channel;
 };
@@ -41,15 +46,15 @@ const playUrl = async (interaction: CommandInteraction, url: string) => {
     const conn = await connect(interaction);
     if (!conn) return;
     const queue: GuildQueue = useQueue(interaction.guildId!)!;
-    await player.play(queue.channel!, url);
+    const { track } = await player.play(queue.channel!, url);
     if (interaction.replied)
         await interaction.editReply({
-            content: `Queued ${inlineCode(queue.currentTrack?.title!)}`,
+            content: `Queued ${inlineCode(track.title!)}`,
             embeds: [],
         });
     else
         await interaction.reply({
-            content: `Queued ${inlineCode(queue.currentTrack?.title!)}`,
+            content: `Queued ${inlineCode(track.title!)}`,
             embeds: [],
         });
 };
